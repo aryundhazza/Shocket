@@ -25,7 +25,7 @@ export default function DepositPage() {
 
       toast.success(result.msg);
       setTimeout(() => {
-        router.push('/'); // Navigate to another page after success
+        router.push('/');
       }, 1500);
     } catch (err) {
       console.log(err);
@@ -38,7 +38,7 @@ export default function DepositPage() {
       saldo: '',
     },
     onSubmit: (values, actions) => {
-      onCreate({ saldo: parseFloat(values.saldo) }); // Ensure saldo is a number
+      onCreate({ saldo: parseFloat(values.saldo) });
       actions.setSubmitting(false);
     },
   });
@@ -66,7 +66,7 @@ export default function DepositPage() {
               type="submit"
               className="w-full cursor-pointer rounded-[4px] bg-green-700 px-3 py-[6px] text-center font-semibold text-white"
               onClick={() => formik.handleSubmit()}
-              disabled={formik.isSubmitting} // Disable button while submitting
+              disabled={formik.isSubmitting}
             >
               Send Rp. {formik.values.saldo}
             </button>

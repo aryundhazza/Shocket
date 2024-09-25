@@ -10,7 +10,7 @@ interface FieldImageProps {
   label?: string;
   formik: FormikProps<any>;
   className?: string;
-  url?: string; // URL for the image if already available
+  url?: string;
 }
 
 export const FieldImage: React.FC<FieldImageProps> = ({

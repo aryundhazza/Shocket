@@ -39,7 +39,7 @@ export default function SignUpForm() {
         email: '',
         password: '',
         referredBy: '',
-        role: '', // Make sure this matches your form's data
+        role: '',
       }}
       validationSchema={SignUpSchema}
       onSubmit={(values, action) => {
