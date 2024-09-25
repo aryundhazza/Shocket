@@ -5,7 +5,7 @@ export async function expirePoints() {
   await prisma.pointLog.deleteMany({
     where: {
       expirationDate: {
-        lt: currentDate, // Hapus poin yang kadaluarsa
+        lt: currentDate,
       },
     },
   });
