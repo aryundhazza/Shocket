@@ -4,6 +4,7 @@ import Wrapper from '@/components/wrapper';
 import { formatDate } from '@/helper/formatDate';
 import { getEventSlug, getEvents } from '@/lib/event';
 import { getToken } from '@/lib/server';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export const revalidate = 0;
@@ -79,7 +80,7 @@ export default async function EventDetail({
             </p>
           </div>
           <ShareButton slug={event.slug} className="hidden max-md:block" />
-          <img
+          <Image
             className="h-[350px] max-sm:h-[200px] max-md:h-[300px] w-full my-5 shadow rounded-lg"
             src={event.image}
             alt={event.title}
