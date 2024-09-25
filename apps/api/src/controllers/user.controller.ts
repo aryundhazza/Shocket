@@ -12,7 +12,6 @@ export class UserController {
     try {
       const { name, email, password, role = 'User', referredBy } = req.body;
 
-      // Cek apakah email sudah terdaftar
       const existingUser = await prisma.user.findUnique({
         where: { email },
       });
@@ -23,11 +22,9 @@ export class UserController {
         });
       }
 
-      // Hash password
       const salt = await genSalt(10);
       const hashPassword = await hash(password, salt);
 
-      // Generate referral code
       function generateReferralCode(length = 8): string {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         return Array.from({ length }, () =>
@@ -47,10 +44,9 @@ export class UserController {
         },
       });
 
-      // Set expiration date for points
       const currentDate = new Date();
       const expirationDate = new Date(currentDate);
-      expirationDate.setMonth(expirationDate.getMonth() + 3); // Set expiration to 3 months later
+      expirationDate.setMonth(expirationDate.getMonth() + 3);
 
       if (referredBy) {
         const referrer = await prisma.user.findUnique({
@@ -63,13 +59,12 @@ export class UserController {
             select: { point: true },
           });
 
-          // Beri poin kepada referrer
           await prisma.pointLog.create({
             data: {
               userId: referrer.id,
               points: 10000,
               transactionType: 'Referral',
-              expirationDate, // Set expiration date for referrer
+              expirationDate,
             },
           });
 
@@ -77,20 +72,18 @@ export class UserController {
             await prisma.user.update({
               where: { id: referrer.id },
               data: {
-                point: (currentPoints.point || 0) + 10000, // Tambah poin baru
+                point: (currentPoints.point || 0) + 10000,
               },
             });
           }
         }
       }
 
-      // Generate JWT token
       const payload = { id: newUser.id };
       const token = sign(payload, process.env.SECRET_JWT!, {
         expiresIn: '15m',
       });
 
-      // Kirim email verifikasi
       const templatePath = path.join(
         __dirname,
         '../templates',

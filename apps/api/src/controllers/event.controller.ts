@@ -113,11 +113,9 @@ export class EventController {
         category,
       } = req.query;
 
-      // Convert page and pageSize to numbers
       const pageNumber = parseInt(page as string, 10);
       const pageSizeNumber = parseInt(pageSize as string, 10);
 
-      // Validate pagination parameters
       if (isNaN(pageNumber) || pageNumber <= 0) {
         return res.status(400).send({
           status: 'error',
@@ -315,8 +313,7 @@ export class EventController {
 
         if (!user) {
           throw new Error('User not found');
-        } 
-
+        }
 
         const event = await prisma.event.findUnique({
           where: { id: eventId },
@@ -333,23 +330,17 @@ export class EventController {
         let price = event.price * totalTicket;
         let saldo = user.saldo;
 
-        console.log(saldo, "SALDOO")
+        console.log(saldo, 'SALDOO');
 
-        // Menggunakan diskon atau poin yang dimiliki
-        // let discount = user.discount || 0; // Ambil diskon yang dimiliki
-        let pointsUsed = user.point || 0; // Ambil poin yang dimiliki
+        let pointsUsed = user.point || 0;
 
-        // Hitung nilai diskon dan poin yang dapat digunakan
-        // discount = Math.min(price, discount);
-
-        const pointValue = 1; // Misalnya: 1 poin = $1
+        const pointValue = 1;
         pointsUsed = Math.min(saldo, pointsUsed * pointValue, price - diskon);
-        if(user.referredBy) {
-          diskon = price * 0.1
+        if (user.referredBy) {
+          diskon = price * 0.1;
         }
         const finalPrice = price - diskon - pointsUsed;
 
-        // Memeriksa apakah saldo mencukupi
         if (finalPrice > saldo) {
           return res.status(400).send({
             status: 'error',
@@ -357,7 +348,6 @@ export class EventController {
           });
         }
 
-        // Memperbarui saldo
         saldo -= finalPrice;
 
         let ticketAvail = event.seatsAvailable;
@@ -439,32 +429,29 @@ export class EventController {
   async getDashboard(req: Request, res: Response) {
     try {
       const { userId, year } = req.params;
-    
+
       let data: any = [];
-      
-      // Fetching events for the given user
+
       const events = await prisma.event.findMany({
         where: {
           organizerId: Number(userId),
-        }
+        },
       });
-    
-      // Use a for...of loop to await asynchronous calls
+
       for (const item of events) {
         const tikets = await prisma.registration.findFirst({
           where: {
             eventId: Number(item.id),
-          }
+          },
         });
-    
-        console.log(tikets, "M<><><><"); // Log the tickets
-    
+
+        console.log(tikets, 'M<><><><');
+
         if (tikets) {
           data.push(tikets);
         }
       }
-    
-      // Initialize an object to hold ticket counts per month
+
       const monthlyCounts: { [key: string]: number } = {
         January: 0,
         February: 0,
@@ -479,33 +466,33 @@ export class EventController {
         November: 0,
         December: 0,
       };
-      let tot : any = []
-      let terjual : number = 0
-    
-      // Process each ticket to count by month
-      data.forEach((ticket: { createdAt: string | number | Date; }) => {
-        const ticketDate = new Date(ticket.createdAt); // Assuming createdAt is a date string
+      let tot: any = [];
+      let terjual: number = 0;
+
+      data.forEach((ticket: { createdAt: string | number | Date }) => {
+        const ticketDate = new Date(ticket.createdAt);
         const ticketYear = ticketDate.getFullYear();
-        const ticketMonth = ticketDate.toLocaleString('default', { month: 'long' }); // Get month name
-    
-        // Only count tickets that match the specified year
+        const ticketMonth = ticketDate.toLocaleString('default', {
+          month: 'long',
+        });
+
         if (ticketYear === Number(year)) {
-          monthlyCounts[ticketMonth] += 1; // Increment count for the respective month
-        } 
+          monthlyCounts[ticketMonth] += 1;
+        }
       });
 
-      Object.values(monthlyCounts).forEach(value => {
-        tot.push(value)
-        terjual+=value
+      Object.values(monthlyCounts).forEach((value) => {
+        tot.push(value);
+        terjual += value;
       });
-    
+
       res.status(200).send({
         status: 'ok',
         msg: 'Get Data Dashboard successfully!',
         data,
         monthlyCounts,
         tot,
-        terjual
+        terjual,
       });
     } catch (err) {
       console.error(err);
@@ -515,7 +502,4 @@ export class EventController {
       });
     }
   }
-  
-  
-
 }
