@@ -33,7 +33,6 @@ export default function ProfilePage() {
       const userId = await getUserId();
       const response = await getProfile(userId, token);
       setProfile(response.result.user);
-      // Update Formik's values after fetching profile data
       formik.setValues({
         email: response.result.user.email || '',
         name: response.result.user.name || '',
@@ -42,9 +41,9 @@ export default function ProfilePage() {
         point: response.result.user.point || '',
         saldo: response.result.user.saldo || '',
       });
-      console.log(response); // Ensure the response is as expected
+      console.log(response);
     } catch (err) {
-      console.error(err); // Handle errors
+      console.error(err);
     }
   };
 
@@ -64,7 +63,7 @@ export default function ProfilePage() {
       if (!ok) throw result.msg;
       toast.success(result.msg);
       setTimeout(() => {
-        router.push('/'); // Navigate to another page after success
+        router.push('/');
       }, 1500);
     } catch (err) {
       console.log(err);
@@ -92,7 +91,7 @@ export default function ProfilePage() {
   }, []);
 
   if (!profile) {
-    return <div>Loading...</div>; // Handle loading state
+    return <div>Loading...</div>;
   }
 
   return (

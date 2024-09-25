@@ -1,4 +1,9 @@
-import { IStatistik, IUserBuy, IUserGetRegistration, IUserGetTiket } from '@/type/user';
+import {
+  IStatistik,
+  IUserBuy,
+  IUserGetRegistration,
+  IUserGetTiket,
+} from '@/type/user';
 import { getUserId } from './server';
 import { EventUpdate } from '@/type/event';
 
@@ -28,7 +33,6 @@ export const updateEvent = async (data: EventUpdate, token: string) => {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
-      // 'Content-Type': 'multipart/form-data' // Do not set Content-Type manually when using FormData
     },
   });
 
@@ -144,10 +148,7 @@ export const getTickets = async (
   return { result, ok: res.ok };
 };
 
-export const getStatistik = async (
-  data: IStatistik,
-  token?: string,
-) => {
+export const getStatistik = async (data: IStatistik, token?: string) => {
   const res = await fetch(`${base_url}/dashboard/${data.userId}/${data.year}`, {
     method: 'GET',
     headers: {

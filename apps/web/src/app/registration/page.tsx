@@ -1,11 +1,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import Table from '@/components/table'; // Adjust the import path as needed
+import Table from '@/components/table';
 import { getToken, getUserId } from '@/lib/server';
 import { toast } from 'react-toastify';
 import { getRegistration } from '@/lib/event';
-
-// Example function to fetch participant data (replace with actual API call)
 
 const PesertaPage: React.FC = () => {
   const [data, setData] = useState<
@@ -21,7 +19,6 @@ const PesertaPage: React.FC = () => {
   >([]);
 
   const fetchParticipantData = async () => {
-    // Replace with your data fetching logic
     try {
       const token = await getToken();
       const organizerId = await getUserId();

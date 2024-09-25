@@ -104,7 +104,6 @@ export class EventController {
 
   async getMyEvents(req: Request, res: Response) {
     try {
-      // Retrieve query parameters
       const {
         search,
         page = 1,
@@ -496,6 +495,74 @@ export class EventController {
       });
     } catch (err) {
       console.error(err);
+      res.status(500).send({
+        status: 'error',
+        msg: 'An unexpected error occurred',
+      });
+    }
+  }
+
+  async review(req: Request, res: Response) {
+    try {
+      const { eventId, userId, rating, comment } = req.body;
+      const event = await prisma.event.findUnique({
+        where: {
+          id: eventId,
+        },
+      });
+      const now = new Date().getTime();
+      console.log(event, 'event');
+
+      if (event && new Date(event.dateTime as Date).getTime() > now) {
+        return res.status(401).send({
+          status: 'error',
+          msg: 'Cannot review an event that has already started',
+        });
+      }
+      const review = await prisma.review.create({
+        data: {
+          rating,
+          comment,
+          userId,
+          eventId,
+        },
+      });
+      res.status(201).send({
+        status: 'ok',
+        msg: 'Review Successfully added!',
+        review,
+      });
+    } catch (err) {
+      res.status(400).send({
+        status: 'error',
+        msg: err,
+      });
+    }
+  }
+
+  async getReview(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).send({
+          status: 'error',
+          msg: 'Event ID is required',
+        });
+      }
+
+      let fixReviews: any[] = [];
+      let reviews = await prisma.review.findMany({
+        where: { eventId: +id },
+        include: { user: true },
+      });
+
+      res.status(200).send({
+        status: 'ok',
+        msg: 'Reviews retrieved successfully!',
+        reviews,
+      });
+    } catch (err) {
       res.status(500).send({
         status: 'error',
         msg: 'An unexpected error occurred',
