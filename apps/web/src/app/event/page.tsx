@@ -60,7 +60,6 @@ export default function EventsPage() {
     debouncedFetchEvents(event.target.value, page, selectedCategory);
   };
 
-  // Handle category change
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -68,23 +67,19 @@ export default function EventsPage() {
     debouncedFetchEvents(searchQuery, page, event.target.value);
   };
 
-  // Handle location change
   const handleLocationChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     debouncedFetchEvents(searchQuery, page, selectedCategory);
   };
 
-  // Fetch events when `searchQuery`, `page`, `selectedCategory`, or `selectedLocation` changes
   useEffect(() => {
     fetchEvents(searchQuery, page, selectedCategory);
   }, []);
 
   return (
     <>
-      {/* Search Input and Filters */}
       <div className="flex flex-col md:flex-row items-center justify-between my-4 md:mx-0 p-4 gap-4">
-        {/* Search Input */}
         <div className="relative flex-1 min-w-0">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg
@@ -114,7 +109,6 @@ export default function EventsPage() {
           />
         </div>
 
-        {/* Filters */}
         <div className="flex gap-4">
           <select
             id="category-filter"

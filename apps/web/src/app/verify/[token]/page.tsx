@@ -24,7 +24,6 @@ export default function VerifyPage() {
 
   return (
     <div className="flex h-full w-full justify-center items-center">
-      {/* <h1>Verification Page</h1> */}
       <LoginPage />
     </div>
   );

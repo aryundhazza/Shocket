@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { getToken } from '@/lib/server';
 import { updateEvent } from '@/lib/event';
 import { ToastContainer, toast } from 'react-toastify';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image';
 
@@ -35,8 +35,7 @@ const validationSchema = Yup.object({
 });
 
 const FormEdit: React.FC<EventFormProps> = ({ event }) => {
-  const router = useRouter(); // Initialize router
-
+  const router = useRouter();
   const handleSubmit = async (
     values: any,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
@@ -55,12 +54,11 @@ const FormEdit: React.FC<EventFormProps> = ({ event }) => {
 
       if (!ok) throw new Error(result.msg);
 
-      toast.success('Event updated successfully!'); // Toastify notification
+      toast.success('Event updated successfully!');
 
-      // Redirect to My Events page
-      router.push('/myevents'); // Update this path to your actual My Events route
+      router.push('/myevents');
     } catch (error) {
-      toast.error('Error updating event.'); // Toastify notification
+      toast.error('Error updating event.');
     } finally {
       setSubmitting(false);
     }
@@ -209,7 +207,7 @@ const FormEdit: React.FC<EventFormProps> = ({ event }) => {
           </Form>
         )}
       </Formik>
-      <ToastContainer /> {/* Add ToastContainer for displaying notifications */}
+      <ToastContainer />
     </>
   );
 };

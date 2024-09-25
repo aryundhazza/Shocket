@@ -37,7 +37,7 @@ export const eventSchema = Yup.object({
       'fileSize',
       'File size too large (max 5MB)',
       (value) => !value || (value instanceof File && value.size <= 5242880),
-    ) // 5 MB in bytes
+    )
     .required('Image is required'),
 });
 
@@ -62,7 +62,6 @@ export const FormCreate: React.FC = () => {
     try {
       console.log(data);
       const token = await getToken();
-      // Create FormData object
       data.dateTime = new Date(data.dateTime).toISOString();
       const formData = new FormData();
       formData.append('data', JSON.stringify(data));
@@ -74,7 +73,6 @@ export const FormCreate: React.FC = () => {
         router.push('/');
         router.refresh();
       }, 1500);
-      // action.resetForm();
     } catch (err) {
       console.log(err);
       toast.error(err as string);
@@ -87,7 +85,6 @@ export const FormCreate: React.FC = () => {
     onSubmit: (values, action) => {
       const file = values.image as File;
       onCreate(values, file);
-      // action.resetForm();
     },
   });
 

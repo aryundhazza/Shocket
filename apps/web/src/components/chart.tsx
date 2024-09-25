@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ApexOptions } from "apexcharts";
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import { getStatistik } from "@/lib/event";
-import { getToken, getUserId } from "@/lib/server";
+import { ApexOptions } from 'apexcharts';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { getStatistik } from '@/lib/event';
+import { getToken, getUserId } from '@/lib/server';
 
 interface SelectYearProps {
   startYear: number;
@@ -12,24 +12,24 @@ interface SelectYearProps {
   onChange: (selectedYear: number) => void;
 }
 
-const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
 const options: ApexOptions = {
   legend: {
     show: false,
-    position: "top",
-    horizontalAlign: "left",
+    position: 'top',
+    horizontalAlign: 'left',
   },
-  colors: ["#3C50E0", "#80CAEE"],
+  colors: ['#3C50E0', '#80CAEE'],
   chart: {
-    fontFamily: "Satoshi, sans-serif",
+    fontFamily: 'Satoshi, sans-serif',
     height: 335,
-    type: "area",
+    type: 'area',
     dropShadow: {
       enabled: true,
-      color: "#623CEA14",
+      color: '#623CEA14',
       top: 10,
       blur: 4,
       left: 0,
@@ -60,12 +60,9 @@ const options: ApexOptions = {
   ],
   stroke: {
     width: [2, 2],
-    curve: "straight",
+    curve: 'straight',
   },
-  // labels: {
-  //   show: false,
-  //   position: "top",
-  // },
+
   grid: {
     xaxis: {
       lines: {
@@ -83,8 +80,8 @@ const options: ApexOptions = {
   },
   markers: {
     size: 4,
-    colors: "#fff",
-    strokeColors: ["#3056D3", "#80CAEE"],
+    colors: '#fff',
+    strokeColors: ['#3056D3', '#80CAEE'],
     strokeWidth: 3,
     strokeOpacity: 0.9,
     strokeDashArray: 0,
@@ -96,20 +93,20 @@ const options: ApexOptions = {
     },
   },
   xaxis: {
-    type: "category",
+    type: 'category',
     categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ],
     axisBorder: {
       show: false,
@@ -121,13 +118,12 @@ const options: ApexOptions = {
   yaxis: {
     title: {
       style: {
-        fontSize: "0px",
+        fontSize: '0px',
       },
     },
     min: 0,
     max: 50,
   },
-  
 };
 
 interface ChartOneState {
@@ -137,81 +133,86 @@ interface ChartOneState {
   }[];
 }
 
-const ChartOne: React.FC<SelectYearProps> = ({ startYear, endYear, onChange }) => {
-  console.log(onchange, 'change')
-  console.log(endYear, 'change')
+const ChartOne: React.FC<SelectYearProps> = ({
+  startYear,
+  endYear,
+  onChange,
+}) => {
+  console.log(onchange, 'change');
+  console.log(endYear, 'change');
 
   interface Series {
     name: string;
     data: number[];
   }
-  
+
   const [series, setSeries] = useState<Series[]>([
     {
-      name: "Product One",
+      name: 'Product One',
       data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
   ]);
 
-    const [selectedYear, setSelectedYear] = useState<number>(2024);
-    const [terjual, setTerjual] = useState<number>(0);
+  const [selectedYear, setSelectedYear] = useState<number>(2024);
+  const [terjual, setTerjual] = useState<number>(0);
 
-
-    const handleChange =  (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const year = parseInt(event.target.value, 10);  // Tidak perlu await
-      setSelectedYear(year);
-      onChange(year);
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const year = parseInt(event.target.value, 10);
+    setSelectedYear(year);
+    onChange(year);
+  };
+  const handleDefault = async (selectedYear: number) => {
+    const token = await getToken();
+    const userId = await getUserId();
+    const data = {
+      year: selectedYear,
+      userId: Number(userId),
     };
-    const handleDefault = async (selectedYear: number) => {
-      const token = await getToken(); // Asumsikan getToken selalu mengembalikan string
-      const userId = await getUserId();
-      const data = {
-        year: selectedYear,
-        userId: Number(userId),
-      };
-    
-      if (token) {
-        const response = await getStatistik(data, token);
-        console.log(response, "RES");
-    
-        if(response.ok){
-          setSeries([
-            {
-              name: "Product One",
-              data: response.result.tot
-            },
-          ]);
-          setTerjual(response.result.terjual)
-        }
-      } else {
-        console.error('Token tidak ditemukan');
+
+    if (token) {
+      const response = await getStatistik(data, token);
+      console.log(response, 'RES');
+
+      if (response.ok) {
+        setSeries([
+          {
+            name: 'Product One',
+            data: response.result.tot,
+          },
+        ]);
+        setTerjual(response.result.terjual);
       }
-    };
-    
-    useEffect(() => {
-      handleDefault(selectedYear); // Pass the selectedYear as an argument
-    }, [selectedYear]);
-    
-    
+    } else {
+      console.error('Token tidak ditemukan');
+    }
+  };
+
+  useEffect(() => {
+    handleDefault(selectedYear);
+  }, [selectedYear]);
 
   const yearOptions = [];
   for (let year = startYear; year <= endYear; year++) {
     yearOptions.push(
       <option key={year} value={year}>
         {year}
-      </option>
+      </option>,
     );
   }
 
   return (
     <div className="w-[80%] col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
       <div className="flex justify-end">
-      <label htmlFor="year-select">Pilih Tahun: </label>
-      <select id="year-select" value={selectedYear ?? ''} onChange={handleChange}>
-        <option value="">Pilih Tahun</option>
-        {yearOptions}
-      </select>
-    </div>
+        <label htmlFor="year-select">Pilih Tahun: </label>
+        <select
+          id="year-select"
+          value={selectedYear ?? ''}
+          onChange={handleChange}
+        >
+          <option value="">Pilih Tahun</option>
+          {yearOptions}
+        </select>
+      </div>
       <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
         <div className="flex w-full ">
           <div className="flex ">
@@ -219,18 +220,11 @@ const ChartOne: React.FC<SelectYearProps> = ({ startYear, endYear, onChange }) =
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
             </span>
             <div className="w-full">
-              <p className="font-semibold text-primary">Total Terjual : {terjual}</p>
+              <p className="font-semibold text-primary">
+                Total Terjual : {terjual}
+              </p>
             </div>
           </div>
-          {/* <div className="flex min-w-47.5">
-            <span className="mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-secondary">
-              <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
-            </span>
-            <div className="w-full">
-              <p className="font-semibold text-secondary"></p>
-              <p className="text-sm font-medium"></p>
-            </div>
-          </div> */}
         </div>
         <div className="flex w-full max-w-45 justify-end">
           <div className="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
@@ -254,7 +248,7 @@ const ChartOne: React.FC<SelectYearProps> = ({ startYear, endYear, onChange }) =
             series={series}
             type="area"
             height={500}
-            width={"100%"}
+            width={'100%'}
           />
         </div>
       </div>

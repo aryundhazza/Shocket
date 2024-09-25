@@ -33,7 +33,7 @@ export default function LoginForm() {
       dispatch(loginAction(result.user));
       await createToken(result.token, result.user.id, result.user.role);
       await router.push('/');
-      await router.refresh(); // refresh the layout
+      await router.refresh();
     } catch (err) {
       console.log(err);
       toast.error(err as string);

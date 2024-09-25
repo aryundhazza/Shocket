@@ -44,6 +44,8 @@ export class EventRouter {
       verifyToken,
       this.eventController.getDashboard,
     );
+    this.router.get('/review/:id', verifyToken, this.eventController.getReview);
+    this.router.post('/review', verifyToken, this.eventController.review);
   }
 
   getRouter(): Router {

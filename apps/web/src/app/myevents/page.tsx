@@ -11,7 +11,6 @@ interface EventType {
   id: string;
   name: string;
   slug: string;
-  // Add other properties according to your event data
 }
 
 interface DropdownOption {
@@ -41,7 +40,6 @@ export default function MyEventsPage() {
   const [searchQuery, setSearchQuery] = useState<string>(search);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  // Function to fetch events
   const fetchMyEvents = async (
     search?: string,
     page?: number,
@@ -56,7 +54,6 @@ export default function MyEventsPage() {
     }
   };
 
-  // Debounced fetch events function
   const debouncedFetchMyEvents = useCallback(
     debounce((search: string, page: number, category: string) => {
       fetchMyEvents(search, page, category);
@@ -64,13 +61,11 @@ export default function MyEventsPage() {
     [],
   );
 
-  // Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
     debouncedFetchMyEvents(event.target.value, page, selectedCategory);
   };
 
-  // Handle category change
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -78,16 +73,13 @@ export default function MyEventsPage() {
     debouncedFetchMyEvents(searchQuery, page, event.target.value);
   };
 
-  // Fetch events when component mounts or when `searchQuery`, `page`, or `selectedCategory` changes
   useEffect(() => {
     fetchMyEvents(searchQuery, page, selectedCategory);
   }, []);
 
   return (
     <>
-      {/* Search and Category Filter */}
       <div className="flex flex-col md:flex-row items-center justify-between my-4 md:mx-0 p-4 gap-4">
-        {/* Search Input */}
         <div className="relative flex-1 min-w-0">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg
@@ -117,7 +109,6 @@ export default function MyEventsPage() {
           />
         </div>
 
-        {/* Filters */}
         <div className="flex gap-4">
           <select
             id="category-filter"
@@ -134,7 +125,6 @@ export default function MyEventsPage() {
         </div>
       </div>
 
-      {/* Event Cards */}
       <Wrapper>
         <div className="flex justify-center flex-wrap gap-4 p-4 overflow-auto">
           {myEvents?.map((item) => (
@@ -145,7 +135,6 @@ export default function MyEventsPage() {
         </div>
       </Wrapper>
 
-      {/* No Data and Pagination */}
       {myEvents.length === 0 && (
         <h1 className="flex justify-center text-center font-bold text-xl p-6">
           Belum Memiliki Data
