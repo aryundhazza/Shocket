@@ -37,5 +37,14 @@ export interface IUserGetTiket {
 
 export interface IStatistik {
   year: number;
-  userId? : number
+  userId?: number;
+}
+
+export interface IUserReview {
+  rating?: number;
+  comment?: string;
+}
+
+export interface IUserGetReview {
+  eventId?: number;
 }

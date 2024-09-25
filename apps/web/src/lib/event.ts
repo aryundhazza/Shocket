@@ -2,7 +2,9 @@ import {
   IStatistik,
   IUserBuy,
   IUserGetRegistration,
+  IUserGetReview,
   IUserGetTiket,
+  IUserReview,
 } from '@/type/user';
 import { getUserId } from './server';
 import { EventUpdate } from '@/type/event';
@@ -150,6 +152,36 @@ export const getTickets = async (
 
 export const getStatistik = async (data: IStatistik, token?: string) => {
   const res = await fetch(`${base_url}/dashboard/${data.userId}/${data.year}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const result = await res.json();
+  return { result, ok: res.ok };
+};
+
+export const postComment = async (data: IUserReview | null, token?: string) => {
+  const res = await fetch(`${base_url}/review`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const result = await res.json();
+  return { result, ok: res.ok };
+};
+
+export const getComment = async (
+  data: IUserGetReview | null,
+  token?: string,
+) => {
+  const res = await fetch(`${base_url}/review/${data?.eventId}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
